@@ -129,10 +129,25 @@ for sample, aff in zip(df_meta['Sample_ID'].tolist(), df_meta['Affected'].tolist
 
 def get_case(Ser):
 	Ser_split = Ser.str.split(',')
-	Ser_new = Ser_split.apply(lambda x: [aff_dict[xx.strip('_IL').strip('_PB').strip('_ONT')] if xx.strip('_IL').strip('_PB').strip('_ONT') in aff_dict != "." else "." for xx in x])
+	#Ser_new = Ser_split.apply(lambda x: [aff_dict[xx.strip('_IL').strip('_PB').strip('_ONT')] if xx.strip('_IL').strip('_PB').strip('_ONT') in aff_dict != "." else "." for xx in x])
+	Ser_new = Ser_split.apply(lambda x: [aff_dict[xx.strip('_IL').strip('_PB').strip('_ONT')] if xx.strip('_IL').strip('_PB').strip('_ONT') in aff_dict else "." for xx in x])
 	return Ser_new.str.join(sep=',')
 
-cols = ["SQ5_SAMPLES" ,"SQ10_SAMPLES" ,"SQ20_SAMPLES" ,"SQ30_SAMPLES" ,"SQ40_SAMPLES" ,"AD2_SAMPLES" ,"AD3_SAMPLES" ,"AD4_SAMPLES" ,"AD5_SAMPLES" ,"ZERO_COV_SAMPLES"]
+def get_il_samples(row):
+	ret = '.'
+	if row['PLATFORM'] == 'IL':
+		ret = ','.join([x for x in [row['HET_SAMPLES'], row['HOMALT_SAMPLES']] if x != '.'])
+	return ret
+
+print('make IL_SAMPLES...')
+df['IL_SAMPLES'] = df.apply(lambda row: get_il_samples(row), axis=1)
+
+print('write cases...')
+cols = ["SQ5_SAMPLES" ,"SQ10_SAMPLES" ,"SQ20_SAMPLES" ,"SQ30_SAMPLES" ,"SQ40_SAMPLES" ,"AD2_SAMPLES" ,"AD3_SAMPLES" ,"AD4_SAMPLES" ,"AD5_SAMPLES" ,"ZERO_COV_SAMPLES", "HET_SAMPLES", "HOMALT_SAMPLES", "IL_SAMPLES"]
+df[["case_"+col for col in cols]] = df[cols].apply(get_case, axis=0)
+
+print('write cases denovo/inh...')
+cols = ['denovo_LR' ,'denovo_LR_LC' ,'MAT_INH_LR' ,'MAT_INH_LR_LC' ,'PAT_INH_LR' ,'PAT_INH_LR_LC' ,'PMAT_INH_LR_LC' ,'denovo_IL' ,'denovo_IL_LC' ,'MAT_INH_IL' ,'PAT_INH_IL' ,'PMAT_INH_IL']
 df[["case_"+col for col in cols]] = df[cols].apply(get_case, axis=0)
 
 print('write the final table...')
