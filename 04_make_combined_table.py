@@ -143,7 +143,7 @@ print('make IL_SAMPLES...')
 df['IL_SAMPLES'] = df.apply(lambda row: get_il_samples(row), axis=1)
 
 print('write cases...')
-cols = ["SQ5_SAMPLES" ,"SQ10_SAMPLES" ,"SQ20_SAMPLES" ,"SQ30_SAMPLES" ,"SQ40_SAMPLES" ,"AD2_SAMPLES" ,"AD3_SAMPLES" ,"AD4_SAMPLES" ,"AD5_SAMPLES" ,"ZERO_COV_SAMPLES", "HET_SAMPLES", "HOMALT_SAMPLES", "IL_SAMPLES"]
+cols = ["SQ5_SAMPLES" ,"SQ10_SAMPLES" ,"SQ20_SAMPLES" ,"SQ30_SAMPLES" ,"SQ40_SAMPLES" ,"SQ50_SAMPLES" ,"SQ60_SAMPLES" ,"SQ70_SAMPLES" ,"AD2_SAMPLES" ,"AD3_SAMPLES" ,"AD4_SAMPLES" ,"AD5_SAMPLES" ,"ZERO_COV_SAMPLES", "HET_SAMPLES", "HOMALT_SAMPLES", "IL_SAMPLES"]
 df[["case_"+col for col in cols]] = df[cols].apply(get_case, axis=0)
 
 print('write cases denovo/inh...')
