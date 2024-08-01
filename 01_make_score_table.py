@@ -29,23 +29,37 @@ print(f'file_out: {file_out}')
 
 # Header
 fh = open(file_out, 'w')
-#fh.write("GENES_PLI\tMAX_PLI\tMAX_PLI_GENE\tMAX_PLI_BIOTYPE\tSIG_PLIS\tSIG_PLI_GENES\t")
-#fh.write("GENES_LOEUF\tMIN_LOEUF\tMIN_LOEUF_GENE\tMIN_LOEUF_BIOTYPE\tSIG_LOEUFS\tSIG_LOEUF_GENES\t")
-#fh.write("GENES_FDR_ASD\tMIN_FDR_ASD\tMIN_FDR_ASD_GENE\tMIN_FDR_ASD_BIOTYPE\tSIG_FDR_ASDS\tSIG_FDR_ASD_GENES\t")
-#fh.write("GENES_FDR_DD\tMIN_FDR_DD\tMIN_FDR_DD_GENE\tMIN_FDR_DD_BIOTYPE\tSIG_FDR_DDS\tSIG_FDR_DD_GENES\t")
-#fh.write("GENES_FDR_NDD\tMIN_FDR_NDD\tMIN_FDR_NDD_GENE\tMIN_FDR_NDD_BIOTYPE\tSIG_FDR_NDDS\tSIG_FDR_NDD_GENES\n")
-
 fh.write("CHROM\tPOS\tEND\tID\tSVTYPE\t")
 fh.write("GENES_PLI\tMAX_PLI\tMAX_PLI_GENE\tSIG_PLIS\tSIG_PLI_GENES\tSIG_PLI_ENS\tSIG_PLI_BIOTYPE\tSIG_PLI_IMPACT\tSIG_PLI_CSQ\tSIG_PLI_DIST\tSIG_PLI_TSS_DIST\t")
 fh.write("GENES_LOEUF\tMIN_LOEUF\tMIN_LOEUF_GENE\tSIG_LOEUFS\tSIG_LOEUF_GENES\tSIG_LOEUF_ENS\tSIG_LOEUF_BIOTYPE\tSIG_LOEUF_IMPACT\tSIG_LOEUF_CSQ\tSIG_LOEUF_DIST\tSIG_LOEUF_TSS_DIST\t")
 fh.write("GENES_FDR_ASD\tMIN_FDR_ASD\tMIN_FDR_ASD_GENE\tSIG_FDR_ASDS\tSIG_FDR_ASD_GENES\tSIG_FDR_ASD_ENS\tSIG_FDR_ASD_BIOTYPE\tSIG_FDR_ASD_IMPACT\tSIG_FDR_ASD_CSQ\tSIG_FDR_ASD_DIST\tSIG_FDR_ASD_TSS_DIST\t")
 fh.write("GENES_FDR_DD\tMIN_FDR_DD\tMIN_FDR_DD_GENE\tSIG_FDR_DDS\tSIG_FDR_DD_GENES\tSIG_FDR_DD_ENS\tSIG_FDR_DD_BIOTYPE\tSIG_FDR_DD_IMPACT\tSIG_FDR_DD_CSQ\tSIG_FDR_DD_DIST\tSIG_FDR_DD_TSS_DIST\t")
-fh.write("GENES_FDR_NDD\tMIN_FDR_NDD\tMIN_FDR_NDD_GENE\tSIG_FDR_NDDS\tSIG_FDR_NDD_GENES\tSIG_FDR_NDD_ENS\tSIG_FDR_NDD_BIOTYPE\tSIG_FDR_NDD_IMPACT\tSIG_FDR_NDD_CSQ\tSIG_FDR_NDD_DIST\tSIG_FDR_NDD_TSS_DIST\n")
+fh.write("GENES_FDR_NDD\tMIN_FDR_NDD\tMIN_FDR_NDD_GENE\tSIG_FDR_NDDS\tSIG_FDR_NDD_GENES\tSIG_FDR_NDD_ENS\tSIG_FDR_NDD_BIOTYPE\tSIG_FDR_NDD_IMPACT\tSIG_FDR_NDD_CSQ\tSIG_FDR_NDD_DIST\tSIG_FDR_NDD_TSS_DIST\t")
+fh.write("GENES_S_HET\n")
 
 file_tada = '/expanse/projects/sebat1/miladm/UCSD/resources/ASD_TADA_2022/fdr_pvals_tada.tsv'
 #file_gnomadv4 = '/expanse/projects/sebat1/miladm/UCSD/resources/gnomAD/v4/Constraint/gnomad.v4.0.constraint_metrics.tsv'
 file_gnomadv4 = '/expanse/projects/sebat1/miladm/UCSD/resources/gnomAD/v4/Constraint/gnomad.v4.0.constraint_metrics_chrX_chrY_v3.tsv'
+file_s_het = '/expanse/projects/sebat1/miladm/UCSD/resources/S_HET/Supplementary_table_1.tsv'
+### for TSCC
+#file_tada =         '/tscc/projects/ps-sebat1/miladm/UCSD/resources/ASD_TADA_2022/fdr_pvals_tada.tsv'
+##file_gnomadv4 =    '/tscc/projects/ps-sebat1/miladm/UCSD/resources/gnomAD/v4/Constraint/gnomad.v4.0.constraint_metrics.tsv'
+#file_gnomadv4 =     '/tscc/projects/ps-sebat1/miladm/UCSD/resources/gnomAD/v4/Constraint/gnomad.v4.0.constraint_metrics_chrX_chrY_v3.tsv'
+#file_s_het =        '/tscc/projects/ps-sebat1/miladm/UCSD/resources/S_HET/Supplementary_table_1.tsv'
+
 file_vep = 'vep.tsv'
+
+ensg_s_het = {}
+with open(file_s_het, 'r') as f:
+	#feild_num	name
+	#1	ensg
+	#7 post_mean
+	f.readline()
+	for line in f:
+		line_parts = line.rstrip().split("\t")
+		ensg = line_parts[0]
+		post_mean = line_parts[6]
+		ensg_s_het[ensg] = post_mean
 
 gene_pli = {}
 gene_loeuf = {}
@@ -124,6 +138,7 @@ with open(file_vep, 'r') as f:
 		gene_fdr_asds = []
 		gene_fdr_dds = []
 		gene_fdr_ndds = []
+		gene_s_het = []
 
 		sig_plis = []
 		sig_pli_genes = []
@@ -181,6 +196,12 @@ with open(file_vep, 'r') as f:
 		min_fdr_ndd = 1000
 		min_fdr_ndd_gene = "."
 
+		for ensg in genes_ens:
+			if ensg in ensg_s_het:
+				gene_s_het.append(ensg_s_het[ensg])
+			else:
+				gene_s_het.append('.')
+				
 		for i_g, gene in enumerate(genes):
 			if gene in gene_pli: 
 				gene_plis.append(gene_pli[gene])
@@ -269,6 +290,7 @@ with open(file_vep, 'r') as f:
 		fh.write(f"{','.join(gene_loeufs)}\t{min_loeuf}\t{min_loeuf_gene}\t{','.join(sig_loeufs)}\t{','.join(sig_loeuf_genes)}\t{','.join(sig_loeuf_genes_ens)}\t{','.join(sig_loeuf_biotypes)}\t{','.join(sig_loeuf_impacts)}\t{','.join(sig_loeuf_csqs)}\t{','.join(sig_loeuf_dists)}\t{','.join(sig_loeuf_tss_dists)}\t")
 		fh.write(f"{','.join(gene_fdr_asds)}\t{min_fdr_asd}\t{min_fdr_asd_gene}\t{','.join(sig_fdr_asds)}\t{','.join(sig_fdr_asd_genes)}\t{','.join(sig_fdr_asd_genes_ens)}\t{','.join(sig_fdr_asd_biotypes)}\t{','.join(sig_fdr_asd_impacts)}\t{','.join(sig_fdr_asd_csqs)}\t{','.join(sig_fdr_asd_dists)}\t{','.join(sig_fdr_asd_tss_dists)}\t")
 		fh.write(f"{','.join(gene_fdr_dds)}\t{min_fdr_dd}\t{min_fdr_dd_gene}\t{','.join(sig_fdr_dds)}\t{','.join(sig_fdr_dd_genes)}\t{','.join(sig_fdr_dd_genes_ens)}\t{','.join(sig_fdr_dd_biotypes)}\t{','.join(sig_fdr_dd_impacts)}\t{','.join(sig_fdr_dd_csqs)}\t{','.join(sig_fdr_dd_dists)}\t{','.join(sig_fdr_dd_tss_dists)}\t")
-		fh.write(f"{','.join(gene_fdr_ndds)}\t{min_fdr_ndd}\t{min_fdr_ndd_gene}\t{','.join(sig_fdr_ndds)}\t{','.join(sig_fdr_ndd_genes)}\t{','.join(sig_fdr_ndd_genes_ens)}\t{','.join(sig_fdr_ndd_biotypes)}\t{','.join(sig_fdr_ndd_impacts)}\t{','.join(sig_fdr_ndd_csqs)}\t{','.join(sig_fdr_ndd_dists)}\t{','.join(sig_fdr_ndd_tss_dists)}\n")
+		fh.write(f"{','.join(gene_fdr_ndds)}\t{min_fdr_ndd}\t{min_fdr_ndd_gene}\t{','.join(sig_fdr_ndds)}\t{','.join(sig_fdr_ndd_genes)}\t{','.join(sig_fdr_ndd_genes_ens)}\t{','.join(sig_fdr_ndd_biotypes)}\t{','.join(sig_fdr_ndd_impacts)}\t{','.join(sig_fdr_ndd_csqs)}\t{','.join(sig_fdr_ndd_dists)}\t{','.join(sig_fdr_ndd_tss_dists)}\t")
+		fh.write(f"{','.join(gene_s_het)}\n")
 
 fh.close()
