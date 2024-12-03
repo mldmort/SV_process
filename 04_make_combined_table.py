@@ -191,7 +191,7 @@ print('make IL_SAMPLES...')
 df['IL_SAMPLES'] = df.apply(lambda row: get_il_samples(row), axis=1)
 
 print('write cases...')
-cols = (["SQ5_SAMPLES" ,"SQ10_SAMPLES" ,"SQ20_SAMPLES" ,"SQ30_SAMPLES" ,"SQ40_SAMPLES" ,"SQ50_SAMPLES" ,"SQ60_SAMPLES" ,"SQ70_SAMPLES" ,"AD2_SAMPLES" ,"AD3_SAMPLES" ,"AD4_SAMPLES" ,"AD5_SAMPLES" ,"ZERO_COV_SAMPLES", "HET_SAMPLES", "HOMALT_SAMPLES", "IL_SAMPLES"] + ['denovo_LR' ,'denovo_LR_LC' ,'MAT_INH_LR' ,'MAT_INH_LR_LC' ,'PAT_INH_LR' ,'PAT_INH_LR_LC' ,'PMAT_INH_LR_LC' ,'denovo_IL' ,'denovo_IL_LC' ,'MAT_INH_IL' ,'PAT_INH_IL' ,'PMAT_INH_IL'])
+cols = (["SQ5_SAMPLES" ,"SQ10_SAMPLES" ,"SQ20_SAMPLES" ,"SQ30_SAMPLES" ,"SQ40_SAMPLES" ,"SQ50_SAMPLES" ,"SQ60_SAMPLES" ,"SQ70_SAMPLES" ,"AD2_SAMPLES" ,"AD3_SAMPLES" ,"AD4_SAMPLES" ,"AD5_SAMPLES" ,"ZERO_COV_SAMPLES", "HET_SAMPLES", "HOMALT_SAMPLES", "IL_SAMPLES", "IL_GT_SAMPLES", "SV2_GT_SAMPLES"] + ['denovo_LR' ,'denovo_LR_LC' ,'MAT_INH_LR' ,'MAT_INH_LR_LC' ,'PAT_INH_LR' ,'PAT_INH_LR_LC' ,'PMAT_INH_LR_LC' ,'denovo_IL' ,'denovo_IL_LC' ,'MAT_INH_IL' ,'PAT_INH_IL' ,'PMAT_INH_IL'])
 df[["case_"+col for col in cols]] = df[cols].apply(get_case, axis=0)
 df[["case_asd"+col for col in cols]] = df[cols].apply(get_case_asd, axis=0)
 
